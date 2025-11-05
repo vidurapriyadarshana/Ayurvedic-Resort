@@ -1,48 +1,32 @@
-import express, { Express, Request, Response } from 'express';
+import express from 'express';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import connectToDatabase from './database/mongodb';
-import { PORT } from './config/env';
+import passport from 'passport';
+import { CLIENT_URL } from './config/env.config';
 
+import authRoutes from './routes/auth.routes';
+import userRoutes from './routes/user.routes';
+import './config/passport.config'; 
+import { errorHandler } from './middleware/errorHandler.middleware';
 
-// Provide a default port if PORT from env is not set
-// and parse it to a number, as 'PORT' from process.env is a string.
-const port = parseInt(PORT || '8080', 10);
+const app = express();
 
-const app: Express = express();
-
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+  origin: CLIENT_URL, 
+  credentials: true
+}));
 app.use(cookieParser());
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize()); 
 
-// Simple route
-app.get('/', (req: Request, res: Response) => {
-    res.send('Welcome to the subscription Tracker API!');
-});
+// --- Routes ---
+app.get('/api/health', (req, res) => res.json({ status: 'UP' }));
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
-/**
- * Starts the server.
- * This function first connects to the database,
- * and only then starts listening for HTTP requests.
- * This prevents the app from running in a broken state if the DB fails.
- */
-const startServer = async () => {
-    try {
-        // 1. Connect to database first
-        await connectToDatabase();
-        
-        // 2. Start listening only after successful DB connection
-        app.listen(port, () => {
-            console.log(`API running on port ${port}`);
-        });
-
-    } catch (error) {
-        console.error("Failed to start server:", error);
-        process.exit(1); // Exit if we can't connect to the DB
-    }
-};
-
-// Execute server start
-startServer();
+// --- ADD ERROR HANDLER AS THE LAST MIDDLEWARE ---
+// This will catch all errors from the routes above
+app.use(errorHandler);
 
 export default app;
