@@ -10,13 +10,13 @@ import { BadRequestError, UnauthorizedError, NotFoundError } from '../utils/ApiE
  * Handles user registration
  */
 // --- UPDATED ---
-// Add new fields to the function signature
 export const registerUser = async (
   email: string, 
   password: string, 
   name: string, 
-  phoneNumber: string, 
-  address: string
+  // Fields are now optional
+  phoneNumber?: string, 
+  address?: string
 ): Promise<IUser> => {
   
   const existingUser = await User.findOne({ email });
@@ -42,6 +42,7 @@ export const registerUser = async (
  * Handles user login (email/password)
  */
 export const loginUser = async (email: string, password: string) => {
+// ... (existing code)
   const user = await User.findOne({ email }).select('+password +refreshTokens');
   if (!user) throw new UnauthorizedError('Invalid credentials.');
   if (!user.password) throw new UnauthorizedError('Please log in with Google.');

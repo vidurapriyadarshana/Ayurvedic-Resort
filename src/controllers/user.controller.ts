@@ -6,7 +6,7 @@ import { User } from '../models/user.model';
  */
 export const getProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user?.id; // No error here
+    const userId = req.user?.id; 
     const user = await User.findById(userId).select('-password -refreshTokens');
     if (!user) {
       return res.status(404).json({ message: 'User not found.' });
@@ -21,7 +21,7 @@ export const getProfile = async (req: Request, res: Response, next: NextFunction
  * Example Admin-only endpoint logic
  */
 export const getAdminDashboard = (req: Request, res: Response) => {
-  res.json({ message: `Welcome to the admin dashboard, user ${req.user?.id}` }); // No error here
+  res.json({ message: `Welcome to the admin dashboard, user ${req.user?.id}` }); 
 };
 
 /**
@@ -30,6 +30,6 @@ export const getAdminDashboard = (req: Request, res: Response) => {
 export const getPatientList = (req: Request, res: Response) => {
   res.json({ 
     message: 'Patient list retrieved.',
-    accessorRoles: req.user?.roles // No error here
+    accessorRoles: req.user?.roles 
   });
 };

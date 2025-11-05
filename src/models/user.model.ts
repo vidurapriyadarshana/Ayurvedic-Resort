@@ -1,14 +1,13 @@
-import { Schema, model, Document, Types } from 'mongoose'; // <-- 1. IMPORT 'Types'
+import { Schema, model, Document, Types } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { UserRole, ROLE_LIST, ROLES } from '../constants/roles.constants';
 
-// Interface for the User document
 export interface IUser extends Document {
-  _id: Types.ObjectId; // <-- 2. ADD THIS LINE
+  _id: Types.ObjectId; 
   email: string;
   name: string;
-  phoneNumber?: string;
-  address?: string;
+  phoneNumber?: string; 
+  address?: string;    
   password?: string;
   googleId?: string;
   roles: UserRole[];
@@ -20,17 +19,17 @@ const userSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   name: {
     type: String,
-    required: true,
+    required: true, 
     trim: true,
   },
   phoneNumber: {
     type: String,
-    required: true, 
+    required: false, 
     trim: true,
   },
   address: {
     type: String,
-    required: true, 
+    required: false, 
     trim: true,
   },
   password: { type: String, required: false, select: false },

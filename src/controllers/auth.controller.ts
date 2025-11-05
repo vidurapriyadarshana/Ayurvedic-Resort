@@ -5,8 +5,6 @@ import { CLIENT_URL, NODE_ENV } from '../config/env.config';
 import { ApiResponse } from '../utils/ApiResponse';
 import { UnauthorizedError } from '../utils/ApiError';
 
-// --- Helper Functions (No Change) ---
-
 const cookieOptions = {
   httpOnly: true,
   secure: NODE_ENV === 'production',
@@ -24,8 +22,6 @@ const asyncHandler = (fn: (req: Request, res: Response, next: NextFunction) => P
   };
 };
 
-// --- WRAP CONTROLLERS WITH asyncHandler ---
-
 export const register = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   // --- UPDATED ---
   // Destructure all required fields from the body
@@ -34,7 +30,6 @@ export const register = asyncHandler(async (req: Request, res: Response, next: N
   // Pass all fields to the service
   await authService.registerUser(email, password, name, phoneNumber, address);
   
-  // --- (No Change) ---
   res.status(201).json(
     new ApiResponse(201, null, 'User registered successfully. Please log in.')
   );
@@ -59,7 +54,8 @@ export const googleCallback = asyncHandler(async (req: Request, res: Response, n
   const { accessToken, refreshToken } = await authService.generateAndStoreTokens(user);
     
   setRefreshCookie(res, refreshToken);
-  res.redirect(`${CLIENT_URL}/auth/callback?token=${accessToken}`);
+  res.redirect(`${CLIENT_URL}/auth/google/callback?token=${accessToken}`);
+
 });
 
 export const refresh = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

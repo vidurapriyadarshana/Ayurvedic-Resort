@@ -1,5 +1,3 @@
-// src/utils/ApiResponse.ts
-
 export class ApiResponse {
   public readonly statusCode: number;
   public readonly data: any;

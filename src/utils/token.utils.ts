@@ -1,5 +1,5 @@
 import jwt, { Secret, SignOptions } from 'jsonwebtoken';
-import { IUser } from '../models/user.model'; // Make sure this path is correct
+import { IUser } from '../models/user.model'; 
 import { 
   JWT_SECRET, 
   JWT_EXPIRES_IN, 
@@ -36,6 +36,6 @@ export const verifyRefreshToken = (token: string): { id: string } | null => {
   try {
     return jwt.verify(token, JWT_REFRESH_SECRET as Secret) as { id: string };
   } catch (error) {
-    return null; // Token is invalid or expired
+    return null; 
   }
 };

@@ -23,7 +23,7 @@ export const errorHandler = (
   } 
   // --- 2. ADD THIS BLOCK to handle Mongoose Validation Errors ---
   else if (err instanceof mongoose.Error.ValidationError) {
-    statusCode = 400; // 400 Bad Request
+    statusCode = 400;
     message = 'Validation failed. Please check your input.';
     // Format the errors into a clean array
     errors = Object.values(err.errors).map(error => ({

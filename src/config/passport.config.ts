@@ -16,27 +16,37 @@ passport.use(new GoogleStrategy({
 async (accessToken, refreshToken, profile, done) => {
   try {
     const email = profile.emails?.[0].value;
+    // --- UPDATED: Get name from profile ---
+    const name = profile.displayName || "Google User";
+
     if (!email) {
       return done(new Error('No email found from Google profile.'), undefined);
     }
 
     // 1. Find user by Google ID
     let user = await User.findOne({ googleId: profile.id });
-    if (user) return done(null, user); // User found, log them in
+    if (user) return done(null, user);
 
     // 2. Find by email to link accounts
     user = await User.findOne({ email });
     if (user) {
       user.googleId = profile.id; // Link Google ID
+      // If user signed up with email, they might not have a google-provided name
+      if (!user.name) {
+        user.name = name;
+      }
       await user.save();
       return done(null, user);
     }
 
     // 3. Create new user
+    // --- UPDATED: Add 'name' field ---
     const newUser = new User({
       email: email,
       googleId: profile.id,
+      name: name, // Add the name
       roles: [ROLES.User],
+      // phoneNumber and address are optional, so this is now valid
     });
     await newUser.save();
     return done(null, newUser);

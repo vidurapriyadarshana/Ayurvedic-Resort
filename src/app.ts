@@ -26,7 +26,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 
 // --- ADD ERROR HANDLER AS THE LAST MIDDLEWARE ---
-// This will catch all errors from the routes above
 app.use(errorHandler);
 
 export default app;

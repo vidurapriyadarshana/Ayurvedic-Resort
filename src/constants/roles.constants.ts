@@ -9,5 +9,4 @@ export const ROLES = {
   Doctor: 'doctor' as UserRole,
 };
 
-// Export an array for Mongoose schema validation
 export const ROLE_LIST = [ROLES.User, ROLES.Admin, ROLES.Therapist, ROLES.Doctor];
